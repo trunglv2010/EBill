@@ -1,0 +1,2 @@
+﻿secondary risk: rủi ro thứ cấp, arises as the result of implementing a risk response. nó sẽ không tồn tại nếu như risk response was not taken
+residual risk: is risk that remains after a risk response has been taken
