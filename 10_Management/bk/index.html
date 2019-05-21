@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>trainingvue</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tachyons/4.11.1/tachyons.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tachyons/4.11.1/tachyons.min.css" rel="stylesheet">
+  </head>
+  <body>
+      <main class="pa4 black-80">
+        <div id="productApp">
+          <div>
+            <div id="masterForm">
+                <nav class="pa3 pa4-ns">
+                    <a class="link dim black b f6 f5-ns dib mr3" href="#" title="Home">Product Manager</a>
+                    <a class="link dim gray    f6 f5-ns dib mr3" href="#" title="Home">Home</a>
+                    <a class="link dim gray    f6 f5-ns dib mr3" href="#" title="About">Features</a>
+                    <a class="link dim gray    f6 f5-ns dib mr3" href="#" title="Store">Pricing</a>
+                  </nav>
+      
+                <h3>Products</h3>
+                <article class="pa4 black-80">
+                  <form>
+                    <fieldset id="sign_up" class="ba b--transparent ph0 mh0">
+                      <legend class="ph0 mh0 fw6 clip">Add a new product</legend>
+                      <div class="mt3">
+                        <label>ID</label>
+                        <input class="pa2 input-reset ba bg-transparent w-100 measure" v-model.trim="productId" id="productId">
+                        <label>Name</label>
+                        <input class="b pa2 input-reset ba bg-transparent" v-model.trim="productName" id="productName">
+                        <label>Price</label>
+                        <input class="b pa2 input-reset ba bg-transparent" v-model.trim="productPrice" id="productPrice">
+                        <button class="b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6" @click="addProduct">Add</button>
+                      </div>
+                    </fieldset>
+                  </form>
+                </article>
+                <div class="overflow-auto">
+                  <h4 style="text-align: center;">Product List</h4>
+                  <table class="f6 w-100 center" cellspacing="0">
+                    <thead>
+                      <tr>
+                        <th class="fw6 bb b--black-20 tl pb3 pr3 bg-white">Product ID</th>
+                        <th class="fw6 bb b--black-20 tl pb3 pr3 bg-white">Product Name</th>
+                        <th class="fw6 bb b--black-20 tl pb3 pr3 bg-white">Product Price</th>
+                        <th class="fw6 bb b--black-20 tl pb3 pr3 bg-white">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody class="lh-copy">
+                      <tr v-for="(product, index) in productList">
+                        <td class="pv3 pr3 bb b--black-20">
+                          <div v-if="!product.updateFlg">{{product.productId}}</div>
+                          <div v-else>
+                              <input v-model.trim="product.productId">
+                          </div>
+                        </td>
+                        <td class="pv3 pr3 bb b--black-20">
+                            <div v-if="!product.updateFlg">{{product.productName}}</div>
+                            <div v-else>
+                                <input v-model.trim="product.productName">
+                            </div>
+                        </td>
+                        <td class="pv3 pr3 bb b--black-20">
+                            <div v-if="!product.updateFlg">{{product.productPrice}}</div>
+                            <div v-else>
+                                <input v-model.trim="product.productPrice">
+                            </div>
+                        </td>
+                        <td class="pv3 pr3 bb b--black-20">
+                          <div v-if="!product.updateFlg">
+                            <button @click="deleteProduct(index)">
+                                Delete
+                            </button>
+                            <button @click="editProduct(product)">
+                                Edit
+                            </button>
+                            <button @click="showProduct(product)">
+                                View
+                            </button>
+                          </div>
+                          <div v-else>
+                              <button @click="product.updateFlg=false;">
+                                  OK
+                              </button>
+                              <button @click="cancelProduct(product)">
+                                  Cancel
+                              </button>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+            </div>
+              <!-- Hidden form -->
+            <div data-v-4a457dc6="" class="card" id="detailForm">
+                <div data-v-4a457dc6="" class="card-header">
+                  Product details
+              </div> 
+              <div data-v-4a457dc6="" class="card-body">
+                <p data-v-4a457dc6="">ID: {{productId}}</p> 
+                <p data-v-4a457dc6="">Product Name: {{productName}}</p> 
+                <p data-v-4a457dc6="">Product Price: {{productPrice}}</p> 
+                <button data-v-4a457dc6="" class="btn btn-success"> Buy Now</button> 
+                <button @click="back"> Back </button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </main>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+ <script type = "text/javascript">
+
+  $(document).ready(function(){
+    $("#detailForm").hide();
+    $(".productUpdate").hide();
+  });
+
+  var vm = new Vue({
+    el: '#productApp',
+    data: {
+        productList: [
+          {productId: "aaa", productName: "a1a1", productPrice: 2000, updateFlg: false},
+          {productId: "bbb", productName: "a1a1", productPrice: 1000, updateFlg: false},
+          {productId: "ccc", productName: "a1a1", productPrice: 4000, updateFlg: false},
+          {productId: "ddd", productName: "a1a1", productPrice: 5000, updateFlg: false},
+          {productId: "eee", productName: "a1a1", productPrice: 6000, updateFlg: false}
+        ],
+        productId: '',
+        productName: '',
+        productPrice: ''
+    },
+    methods: {
+      addProduct(){
+        if(this.productId.trim() == ""){
+          $("#productId").focus();
+        }else{
+          this.productList.push({productId: this.productId, productName: this.productName, productPrice: this.productPrice});
+          this.productId = "";
+          this.productName = "";
+          this.productPrice = "";
+        }
+      },
+      deleteProduct(index){
+        this.productList.splice(index, 1);
+      },
+      showProduct(product){
+        $("#detailForm").show();
+        $("#masterForm").hide();
+        this.productId = product.productId;
+        this.productName = product.productName;
+        this.productPrice = product.productPrice;
+      },
+      back(){
+        $("#detailForm").hide();
+        $("#masterForm").show();
+        this.productId = "";
+        this.productName = "";
+        this.productPrice = "";
+      },
+      editProduct(product){
+        product.updateFlg = true;
+      },
+      cancelProduct(product){
+        product.productId = this.productId;
+        product.productName = this.productName;
+        product.productPrice = this.productPrice;
+        product.updateFlg = false;
+      }
+    }
+  });
+
+</script>
